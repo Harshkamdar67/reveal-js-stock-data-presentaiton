@@ -1,62 +1,45 @@
 # reveal-js-stock-data-presentaiton
-# Data Visualization on Financial Datasets
+# Financial Data Visualization Project
 
-This project involves a data visualization exploration of financial datasets, aiming to uncover insights and trends through visual representation. The presentation is built using Reveal.js, incorporating various visualization tools and techniques.
+This repository contains the codebase for a financial data visualization project. The project utilizes various tools and libraries to visualize financial datasets and extract meaningful insights.
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Meet the Team](#meet-the-team)
-- [The Need](#the-need)
-- [Dataset Overview](#dataset-overview)
-- [Visualization Tools](#visualization-tools)
-- [Key Objectives](#key-objectives)
-- [Overall Data Visualizations](#overall-data-visualizations)
-- [Inferences](#inferences)
-- [Conclusion](#conclusion)
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
 
 ## Introduction
-The project focuses on visualizing financial datasets to provide a comprehensive understanding of trends, patterns, and statistical metrics in stock analysis. The presentation uses Reveal.js for an interactive and visually appealing experience.
+The project involves creating visualizations from financial datasets, exploring trends, and performing statistical analysis. The codebase is organized to facilitate easy understanding and customization.
 
-## Meet the Team
-Introduce the team members involved in the project:
+## Project Structure
+The main components of the project are organized as follows:
 
-- Harsh Kamdar
-- Shivam Gupta
-- Shikhar Gupta
-- Vinit Lathiwala
-- Mansi Singh
+- `static/`: Contains static assets, including images and CSS styles.
+- `templates/`: HTML templates for the presentation slides.
+- `app.py`: The main Flask application file.
+- `data/`: Placeholder for dataset files.
+- `reveal.js-master/`: Reveal.js library for creating interactive presentations.
+- `README.md`: Documentation for the codebase.
 
-## The Need
-Explore why visualizing financial datasets is crucial and how it contributes to a better understanding of market dynamics.
+## Dependencies
+The project relies on the following dependencies:
 
-## Dataset Overview
-Provide an overview of the dataset used in the project, including key columns and sample data.
+- [Reveal.js](https://revealjs.com/): Used for creating interactive presentations.
+- [D3.js](https://d3js.org/): A JavaScript library for data visualization.
+- [Flask](https://flask.palletsprojects.com/): A Python web framework used for serving the presentation.
 
-## Visualization Tools
-Highlight the visualization tools utilized in the project:
+## Installation
+Follow these steps to set up the project locally:
 
-- D3.js
-- Matplotlib
-- Bokeh
+1. Clone the repository: `git clone https://github.com/your-username/financial-data-visualization.git`
+2. Navigate to the project directory: `cd financial-data-visualization`
+3. Install dependencies: `pip install -r requirements.txt`
 
-## Key Objectives
-Outline the key objectives of the data visualizations:
+## Usage
+To run the project, execute the following command:
 
-1. Trend Analysis
-2. Understanding Statistical Metrics in Stock Analysis
-3. Volatility Assessment
-4. Correlation and Relationships
-5. Trading Volume Analysis
-6. Moving Averages and Signal Analysis
-7. Performance Comparison
-
-## Overall Data Visualizations
-Summarize the main inferences drawn from the visualizations, covering trend analysis, volatility assessment, correlation, and more.
-
-## Inferences
-Provide detailed observations and inferences from the visualizations, categorized by different aspects of financial data analysis.
-
-## Conclusion
-Sum up the findings and conclusions drawn from the data visualizations, emphasizing key takeaways and insights.
-
-Feel free to customize this README according to your specific content and presentation structure.
+```bash
+python app.py
