@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Data Visualizations on Financial Datasets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="static\reveal js\reveal.js-master\dist\reveal.css">
+    <link rel="stylesheet" href="static\reveal js\reveal.js-master\dist\reveal.css">
+    <link rel="stylesheet" href="static\reveal js\reveal.js-master\dist\theme\dracula.css">
+    <script src="https://kit.fontawesome.com/dbfd54ef97.js" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+    <style>
+
+        
+
+        #visualization-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999; /* Set a high z-index to ensure it's in front */
+        }
+
+        .slide-content {
+            text-align: center;
+        }
+
+        .team-member {
+            margin: 20px 0;
+        }
+
+        .fade-in {
+            opacity: 0;
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transition: opacity 1s;
+        }
+
+        .team-slide {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .team-slide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: 200% 200%;
+        background: linear-gradient(45deg, #3498db, #2ecc71); /* Adjust gradient colors */
+        opacity: 0.8;
+        z-index: -1;
+        animation: gradientAnimation 8s infinite, pulsate 3s infinite; /* Adjust animation durations */
+    }
+
+    @keyframes gradientAnimation {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes pulsate {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    .team-member {
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s, transform 1s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .team-member i {
+        font-size: 3em;
+        margin-bottom: 10px;
+        color: white; /* Icon color */
+    }
+
+    .team-slide.active .team-member {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .dataset-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dataset-table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 50%; /* Adjusted width */
+    height: auto;
+    max-width: 600px;
+    margin-left: -500px;
+}
+
+.dataset-table th, .dataset-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center; /* Center align text */
+}
+
+.dataset-table th {
+    background-color: transparent;
+}
+
+.tools-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to right, #1d1d1d, #2b2b2b); /* Dark gradient background */
+    color: #fff;
+    text-align: center;
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    background-image: url('https://www.transparenttextures.com/patterns/axiom-pattern.png'); /* Subtle pattern */
+}
+
+.tools-slide h1 {
+    font-family: 'Exo 2', sans-serif; /* Futuristic font */
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.tools-slide section {
+    font-family: 'Roboto', sans-serif; /* Modern font for tool names */
+    font-size: 1.5em;
+    margin: 15px;
+    padding: 10px;
+    border: 2px solid #00adb5; /* Default teal border color */
+    border-radius: 10px;
+    background: #333; /* Dark background color */
+    box-shadow: 0 0 20px rgba(0, 173, 181, 0.5); /* Teal shadow */
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.tools-slide .d3js {
+    border-color: #ffcc29; /* Yellow border for D3.js */
+    background: #333; /* Dark background for D3.js */
+}
+
+.tools-slide .matplotlib {
+    border-color: #4caf50; /* Green border for Matplotlib */
+    background: #333; /* Dark background for Matplotlib */
+}
+
+.tools-slide .bokeh {
+    border-color: #ff6384; /* Pink border for Bokeh */
+    background: #333; /* Dark background for Bokeh */
+}
+
+.tools-slide section:hover {
+    background: #00adb5; /* Teal background color on hover */
+    color: #fff;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1 -->
+            <section class="slide-content title-slide">
+                <h3 class="animate__animated animate__fadeInDown">Visualizing Financial Datasets</h3>
+                <h4 class="animate__animated animate__fadeInUp">Analysis of stock data</h4>
+            </section>
+            
+            
+
+            <section class="slide-content">
+                <h1>Meet the Team</h1>
+            
+                <section class="team-slide">
+                    <div class="team-member fade-in">
+                        <i class="fas fa-user"></i> <!-- Font Awesome user icon -->
+                        Harsh Kamdar
+                    </div>
+                </section>
+            
+                <section class="team-slide">
+                    <div class="team-member fade-in">
+                        <i class="fas fa-user"></i>
+                        Shivam Gupta
+                    </div>
+                </section>
+            
+                <section class="team-slide">
+                    <div class="team-member fade-in">
+                        <i class="fas fa-user"></i>
+                        Shikhar Gupta
+                    </div>
+                </section>
+            
+                <section class="team-slide">
+                    <div class="team-member fade-in">
+                        <i class="fas fa-user"></i>
+                        Vinit Lathiwala
+                    </div>
+                </section>
+            
+                <section class="team-slide">
+                    <div class="team-member fade-in">
+                        <i class="fas fa-user"></i>
+                        Mansi Singh
+                    </div>
+                </section>
+            </section>
+
+            
+            <section class="dataset-slide">
+                <section>
+                <h1>The Need</h1>
+                <p>Why do we need to visualise Financial datasets?</p>
+            </section>
+            <section>
+                <table class="dataset-table" style="margin-left: -200px;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Open</th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Close</th>
+                            <th>AdjClose</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2013-05-13</td>
+                            <td>80.989998</td>
+                            <td>88.0</td>
+                            <td>79.150002</td>
+                            <td>87.800003</td>
+                            <td>87.800003</td>
+                            <td>22416900</td>
+                        </tr>
+                        <tr>
+                            <td>2013-05-14</td>
+                            <td>94.220001</td>
+                            <td>97.120003</td>
+                            <td>81.150002</td>
+                            <td>83.239998</td>
+                            <td>83.239998</td>
+                            <td>37163900</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>2013-05-15</td>
+                            <td>81.800003</td>
+                            <td>86.879997</td>
+                            <td>78.110001</td>
+                            <td>84.839996</td>
+                            <td>84.839996</td>
+                            <td>16878700</td>
+                        </tr>
+                        
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                </table>
+            </section>
+
+          
+            <section>
+                <img src="static\WhatsApp Image 2023-11-25 at 21.23.28_eae10a51.jpg" alt="img">
+            </section>
+            </section>
+
+            <section>
+                <section>
+                <h2>Dataset Overview</h2>
+            </section>
+    <section class="dataset-slide">
+        <ul>
+            <li>Date</li>
+            <li>Open</li>
+            <li>High</li>
+            <li>Low</li>
+            <li>Close</li>
+            <li>AdjClose</li>
+            <li>Volume</li>
+        </ul>
+    </section>
+            </section>
+
+            
+            <!-- Slide 4: Visualization Tools -->
+            <section class="slide-content tools-slide" >
+                <section class="d3js">
+                <h1>Visualization Tools</h1>
+                </section>
+                
+                <section class="matplotlib">
+                    D3.js
+                </section>
+
+                <section class="bokeh">
+                    Matplotlib
+                </section>
+
+                <section>
+                    Bokeh
+                </section>
+            </section>
+            
+            <!-- Slide 5: Key Objectives -->
+            <section class="slide-content">
+                <section>
+                <h1>Key Objectives</h1>
+                <p>The purpose behind visualisations</p>
+            </section>
+
+            <section>
+                <h3>Trend Analysis</h3>
+                <img src="static\trend.jpg" alt="">
+            </section>
+
+            <section class="statistical">
+                <h3>Understanding Statistical Metrics in Stock Analysis</h3>
+                <img src="static\mean.png" alt="">
+            </section>
+
+            <section>
+                <img src="static\math.jpg" alt="">
+            </section>
+
+            <section>
+                <img src="static\partial.jpg" alt="">
+            </section>
+
+            <section>
+                <img src="static\core.jpg" alt="">
+            </section>
+
+            <section>
+                <h3 style="margin-top: -100px;">Performace comparison with other companies</h3>
+                
+                <div id="visualization-container" style="margin-top: 100px;"></div>
+            </section>
+            
+            </section>
+            </section>
+            
+            <!-- Slide 6: Overall Data Visualizations -->
+            <section class="slide-content">
+                <section>
+                <h1>Inferences</h1>
+                <p>Observations from the previously shown visualisations.</p>
+            </section>
+            <section class="slide-content">
+                <h3>1. Trend Analysis</h3>
+                <p>Identified overall trends in stock prices over time.</p>
+            </section>
+            
+            <!-- Slide 8: Challenges and Solutions -->
+            <section class="slide-content">
+                <h3>2. Volatility Assessment</h3>
+                <p>Examined the amplitude of price fluctuations to understand the volatility of the stock.</p>
+            </section>
+            
+            <!-- Slide 9: Conclusion -->
+            <section class="slide-content">
+                <h3>3. Correlation and Relationships</h3>
+                <p>Explore the relationships between different stock parameters.</p>
+            </section>
+            
+            <!-- Slide 10: Key Objectives -->
+            <section class="slide-content">
+                <h3>4. Trading Volume Analysis</h3>
+                <p>Assess trading volumes to understand the level of market interest in a particular stock.</p>
+            </section>
+            
+            <!-- Slide 11: Statistical Metrics -->
+            <section class="slide-content">
+                <h3>5. Moving Averages and Signal Analysis</h3>
+                <p>Use moving averages to smooth out short-term fluctuations and identify long-term trends.</p>
+            </section>
+            
+            <!-- Slide 12: Identified Trends and Patterns -->
+            <section class="slide-content">
+                <h3>6. Statistical Metrics</h3>
+                <p>Calculated statistical measures such as mean, median, standard deviation, and skewness.</p>
+            </section>
+            
+            <!-- Slide 13: Challenges Faced and Solutions -->
+            <section class="slide-content">
+                <h3>7. Performance Comparison</h3>
+                <p>Compared the performance of the stock with other companies or market indices.</p>
+            </section>
+            
+            </section>
+            
+            <!-- Slide 9: Conclusion -->
+            <section class="slide-content">
+                <h1>Conclusion</h1>
+            </section>
+        </div>
+    </div>
+
+    <script src="static\reveal js\reveal.js-master\dist\reveal.js"></script>
+    <script>
+
+
+        
+Reveal.addEventListener('slidechanged', function(event) {
+    const currentSlide = event.currentSlide;
+    
+    // Check if the current slide has the "statistical" class
+    if (currentSlide.classList.contains('statistical')) {
+        creatViz();
+    }
+});
+
+Reveal.addEventListener('slidechanged', function (event) {
+        var currentSlide = event.currentSlide;
+        var titleSlides = document.querySelectorAll('.title-slide');
+
+        titleSlides.forEach(function (slide) {
+            slide.classList.remove('active');
+        });
+
+        currentSlide.classList.add('active');
+    });
+
+ Reveal.addEventListener('slidechanged', function (event) {
+        var currentSlide = event.currentSlide;
+        var teamSlides = document.querySelectorAll('.team-slide');
+
+        teamSlides.forEach(function (slide) {
+            slide.classList.remove('active');
+        });
+
+        currentSlide.classList.add('active');
+    });
+        Reveal.addEventListener('slidechanged', function(event) {
+            const currentSlide = event.currentSlide;
+            const fadeElements = currentSlide.getElementsByClassName('fade-in');
+            for (const element of fadeElements) {
+                element.classList.add('active');
+            }
+        });
+
+
+        function creatViz() {
+    // D3.js code for the visualization
+    const width = 800; // Adjust the width
+    const height = 600; // Adjust the height
+
+    const x = d3.scaleUtc()
+        .range([40, width - 40])
+        .clamp(true);
+
+    const y = d3.scaleLog()
+        .range([height - 30, 20]);
+
+    const z = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const svg = d3.create("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height])
+        .style("background-color", "transparent"); // Set background color to transparent
+
+    document.getElementById('visualization-container').appendChild(svg.node());
+
+    // Load data from Flask server
+    fetch('/stocks')
+        .then(response => response.json())
+        .then(data => {
+            const parseDate = d3.utcParse("%Y-%m-%d");
+
+            const stocks = Object.keys(data).flatMap(key =>
+                data[key].map(d => ({ Symbol: key, Date: parseDate(d.Date), Close: +d.Close, high: +d.High, low: +d.Low, Volume: +d.Volume }))
+            );
+
+            x.domain(d3.extent(stocks, d => d.Date));
+            y.domain([0.2, 6]);
+            z.domain([...new Set(stocks.map(d => d.Symbol))]);
+
+            const series = d3.groups(stocks, d => d.Symbol).map(([key, values]) => {
+                const v = values[0].Close;
+                return { key, values: values.map(({ Date, Close }) => ({ Date, value: Close / v })) };
+            });
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height - 30})`)
+                .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
+                .call(g => g.select(".domain").remove())
+                .attr("stroke", "white"); // Set axis color
+
+            svg.append("g")
+                .attr("transform", `translate(40,0)`)
+                .call(d3.axisLeft(y)
+                    .ticks(null, x => +x.toFixed(6) + "×"))
+                .call(g => g.selectAll(".tick line").clone()
+                    .attr("stroke-opacity", d => d === 1 ? null : 0.2)
+                    .attr("x2", width - 80))
+                .call(g => g.select(".domain").remove())
+                .attr("stroke", "white"); // Set axis color
+
+            const rule = svg.append("g")
+                .append("line")
+                .attr("y1", height)
+                .attr("y2", 0)
+                .attr("stroke", "white");
+
+            const serie = svg.append("g")
+                .style("font", "bold 10px sans-serif")
+                .selectAll("g")
+                .data(series)
+                .join("g");
+
+            const line = d3.line()
+                .x(d => x(d.Date))
+                .y(d => y(d.value));
+
+            serie.append("path")
+                .attr("fill", "none")
+                .attr("stroke-width", 1.5)
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke", d => z(d.key))
+                .attr("d", d => line(d.values));
+
+            serie.append("text")
+                .datum(d => ({ key: d.key, value: d.values[d.values.length - 1].value }))
+                .attr("fill", d => z(d.key))
+                .attr("paint-order", "stroke")
+                .attr("stroke", "black")
+                .attr("stroke-width", 3)
+                .attr("x", x.range()[1] + 3)
+                .attr("y", d => y(d.value))
+                .attr("dy", "0.35em")
+                .text(d => d.key);
+
+            function update(date) {
+                date = d3.utcDay.round(date);
+                rule.attr("transform", `translate(${x(date) + 0.5},0)`);
+                serie.attr("transform", ({ values }) => {
+                    const i = d3.bisector(d => d.Date).left(values, date, 0, values.length - 1);
+                    return `translate(0,${y(1) - y(values[i].value / values[0].value)})`;
+                });
+                svg.property("value", date).dispatch("input");
+            }
+
+            d3.transition()
+                .ease(d3.easeCubicOut)
+                .duration(1500)
+                .tween("date", () => {
+                    const i = d3.interpolateDate(x.domain()[1], x.domain()[0]);
+                    return t => update(i(t));
+                });
+
+            svg.on("mousemove touchmove", function (event) {
+                if (event) {
+                    update(x.invert(d3.pointer(event, this)[0]));
+                    event.preventDefault();
+                }
+            });
+
+            
+
+            // Uncomment the line below if you want to remove the introductory transition.
+            // update(x.domain()[0]);
+        });
+}
+
+
+
+
+Reveal.initialize();
+
+
+    </script>
+</body>
+</html>
