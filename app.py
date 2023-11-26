@@ -13,8 +13,7 @@ def load_csv_data(filename):
 # Route to serve the HTML page
 @app.route('/')
 def index():
-    bokeh_script = server_document('http://localhost:5006/bkeh')
-    return render_template('reveal.html', bokeh_script=bokeh_script)
+    return render_template('reveal.html')
 
 # Route to serve stock data as JSON
 @app.route('/stocks')
