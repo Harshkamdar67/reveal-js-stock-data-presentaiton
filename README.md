@@ -34,7 +34,7 @@ The project relies on the following dependencies:
 ## Installation
 Follow these steps to set up the project locally:
 
-1. Clone the repository: `git clone https://github.com/your-username/financial-data-visualization.git`
+1. Clone the repository: `git clone (https://github.com/Harshkamdar67/reveal-js-stock-data-presentaiton)`
 2. Navigate to the project directory: `cd financial-data-visualization`
 3. Install dependencies: `pip install -r requirements.txt`
 
